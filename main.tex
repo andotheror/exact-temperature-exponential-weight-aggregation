@@ -1,0 +1,297 @@
+\documentclass[twoside]{article}
+\usepackage[preprint]{aistats2027}
+\usepackage[round,authoryear]{natbib}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{url}
+\renewcommand{\bibname}{References}
+\renewcommand{\bibsection}{\subsubsection*{\bibname}}
+\bibliographystyle{apalike}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathcal R}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\sigm}{\operatorname{sigm}}
+\begin{document}
+\runningauthor{}
+\twocolumn[
+\aistatstitle{The Exact Temperature of Exponential-Weight Aggregation}
+\aistatsauthor{Pahan Dewasurendra}
+\aistatsaddress{Johns Hopkins University}
+]
+\begin{abstract}
+The aggregate with exponential weights is a basic model-selection procedure whose behavior under random-design squared loss has resisted a sharp characterization. It is known to be suboptimal in expectation at sufficiently low constant temperatures, while a recent result proves the optimal excess-risk rate at temperature $T\geq4b^2$ when labels and predictions lie in $[0,b]$. We close the constant gap. For every fixed $T<4b^2$, we construct a fixed two-element dictionary and bounded random-design regression problems on which the expected excess risk is $\Omega(b^2/\sqrt n)$. The minimax two-model aggregation rate is $\Theta(b^2/n)$. Thus $4b^2$ is the exact inclusive threshold for uniform expectation-rate optimality. The same threshold governs every fixed full-support prior on two experts, while arbitrary priors receive oracle remainder $T\log(1/\pi_j)/(n+1)$ above it. The construction uses two nearly parallel experts whose loss difference has variance almost $4b^2$ times their squared separation. A local binomial limit resolves the competition between erroneous model selection and the curvature gain from averaging. The same constant is also necessary and sufficient for the deterministic exponential-tilting inequality behind the recent upper bound. The threshold is therefore statistical and analytic, rather than an artifact of either proof.
+\end{abstract}
+
+\section{Introduction}
+
+Model-selection aggregation asks for a predictor nearly as accurate as the best member of a finite dictionary. Under squared loss on $[0,b]$, the optimal uniform residual has order $b^2\min\{1,\log M/n\}$ for a dictionary of size $M$ \citep{tsybakov2003optimal}. Several procedures attain this rate. Progressive mixtures average sequential exponential-weight predictors \citep{audibert2007progressive}. Q-aggregation modifies the empirical objective and is optimal both in expectation and deviation \citep{lecue2014optimal}. The more immediate procedure is the \emph{aggregate with exponential weights} (AEW): exponentiate the negative empirical risks once, then average the dictionary using the resulting Gibbs weights.
+
+The random-design behavior of this unaveraged aggregate has been open for more than a decade. \citet{lecue2013optimality} showed that AEW has expected excess risk of order $n^{-1/2}$ for temperatures below an unspecified absolute constant. They also proved deviation suboptimality over a much larger temperature range. These two notions are different in aggregation. Progressive mixtures, for example, are expectation-optimal but deviation-suboptimal \citep{audibert2007progressive}.
+
+Very recent work settles the high-temperature side. \citet{hogsgaard2026aggregation} prove, without a Bernstein condition, that AEW satisfies
+\begin{equation}
+\E\R(\widehat f_T)\leq \min_{f\in\cF}\R(f)+\frac{T\log M}{n+1}
+\label{eq:upper}
+\end{equation}
+for squared loss on $[0,b]$ whenever $T\geq4b^2$. Their result establishes a constant-temperature phase transition but leaves its location open.
+
+We show that their sufficient constant is exact. At every $T<4b^2$, two experts suffice for $\Omega(n^{-1/2})$ expected excess. Our experts are close to each other but alternate between being near one and near zero. The labels choose the opposite endpoint. Their empirical loss difference is therefore a scaled biased random walk, while the curvature benefit of averaging is smaller by a factor approaching four. A local limit at the Gibbs decision boundary identifies the precise balance.
+
+\paragraph{Contributions.} Our results are:
+\begin{itemize}
+\item an exact phase theorem: unaveraged AEW is uniformly expectation-rate optimal if and only if $T\geq4b^2$
+\item an $\Omega(b^2/\sqrt n)$ lower bound below the threshold using only two deterministic experts and a two-point input space
+\item a prior-dependent upper bound for arbitrary priors and the same exact threshold for every fixed two-expert prior
+\item a local-limit formula separating wrong-model cost from the negative curvature gain of aggregation
+\item a proof that $4b^2$ is also the exact threshold for the squared-loss tilting inequality used in the high-temperature analysis
+\end{itemize}
+
+This question is specific to the unaveraged random-design aggregate. Fixed-design exponential weighting has sharp oracle inequalities under noise assumptions \citep{dalalyan2008aggregation}. Progressive mixtures and localized online-to-batch aggregates average across sample sizes \citep{mourtada2023local}. Q-aggregation uses a different objective. None determines the temperature studied here.
+
+\section{Setting and Exact Phase}
+
+Let $P$ be a distribution on $\mathcal X\times[0,b]$, and let $\cF=\{f_1,\ldots,f_M\}$ be a deterministic dictionary of measurable functions from $\mathcal X$ to $[0,b]$. For squared-loss risk
+\[
+\R_P(f)=\E_P[(f(X)-Y)^2],
+\]
+observe an i.i.d. sample $D_n=((X_i,Y_i))_{i=1}^n$. At temperature $T>0$, AEW uses
+\begin{equation}
+\widehat\theta_j=
+\frac{\exp\{-T^{-1}\sum_{i=1}^n(f_j(X_i)-Y_i)^2\}}
+{\sum_{k=1}^M\exp\{-T^{-1}\sum_{i=1}^n(f_k(X_i)-Y_i)^2\}}
+\label{eq:weights}
+\end{equation}
+and outputs $\widehat f_T=\sum_j\widehat\theta_jf_j$.
+
+We call a fixed temperature uniformly expectation-rate optimal if a finite constant $C_{T,b}$ satisfies
+\[
+\E_{D_n}\R_P(\widehat f_T)
+\leq \min_{j\leq M}\R_P(f_j)+C_{T,b}\frac{\log M}{n}
+\]
+for every $n,M,P$, and $\cF$ as above. Allowing the problem to depend on $n$ is standard in this minimax definition.
+
+\begin{theorem}[Exact temperature phase]
+\label{thm:phase}
+For squared loss with labels and predictions in $[0,b]$, AEW is uniformly expectation-rate optimal if and only if
+\[
+T\geq4b^2.
+\]
+More precisely:
+\begin{enumerate}
+\item If $T\geq4b^2$, inequality~\eqref{eq:upper} holds for every finite dictionary and every random-design distribution.
+\item For every fixed $0<T<4b^2$, there are constants $\kappa>0$ and $n_0$, a fixed two-element dictionary, and distributions $P_n$ supported on two input-label pairs such that, for every $n\geq n_0$,
+\begin{equation}
+\E_{D_n}\R_{P_n}(\widehat f_T)
+-\min_{j\leq2}\R_{P_n}(f_j)
+\geq \frac{\kappa b^2}{\sqrt n}.
+\label{eq:lower}
+\end{equation}
+\end{enumerate}
+Only $P_n$ changes with $n$ in the second claim.
+\end{theorem}
+
+The first claim is the squared-loss theorem of \citet{hogsgaard2026aggregation}. Our contribution is the matching second claim. Since $M=2$, \eqref{eq:lower} rules out any uniform $O(\log M/n)$ bound below the threshold. The boundary $T=4b^2$ belongs to the optimal regime.
+
+We prove the normalized case $b=1$. Multiplying every label and prediction by $b$ multiplies squared losses and excess risk by $b^2$, and replaces $T$ by $T/b^2$ in \eqref{eq:weights}.
+
+\section{The Two-Expert Construction}
+
+Fix $0<T<4$. Let $c>0$ and $h\in(0,1)$ be constants chosen below, and put
+\[
+a=h(2-h).
+\]
+The input space is $\{+,-\}$. Labels and predictions are given by Table~\ref{tab:construction}.
+
+\begin{table}[h]
+\centering
+\caption{Normalized lower-bound instance.}
+\label{tab:construction}
+\begin{tabular}{c@{\qquad}ccc}
+\toprule
+$X$ & $Y$ & $f_1(X)$ & $f_2(X)$\\
+\midrule
+$+$ & $0$ & $1-h$ & $1$\\
+$-$ & $1$ & $0$ & $h$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For every sample size $n>c^2$, set
+\begin{equation}
+P_n(X=+)=\frac12+\frac{c}{2\sqrt n},
+\qquad P_n(X=-)=\frac12-\frac{c}{2\sqrt n}.
+\label{eq:pn}
+\end{equation}
+At $+$, the loss difference $\Delta=(f_2-Y)^2-(f_1-Y)^2$ equals $a$. At $-$, it equals $-a$. Therefore
+\begin{equation}
+\R_{P_n}(f_2)-\R_{P_n}(f_1)=\frac{ac}{\sqrt n}>0,
+\label{eq:riskgap}
+\end{equation}
+so $f_1$ is the dictionary oracle. Also $(f_1-f_2)^2=h^2$ at both inputs.
+
+Encode $+$ by $+1$ and $-$ by $-1$, and let $Z_n$ be the sum of the $n$ encodings. The weight on $f_1$ is
+\begin{equation}
+W_n=\sigm(aZ_n/T),
+\qquad \sigm(u)=\frac{1}{1+e^{-u}}.
+\label{eq:logistic}
+\end{equation}
+The following identity isolates the two effects of aggregation.
+
+\begin{proposition}[Exact risk decomposition]
+\label{prop:risk}
+On the instance above,
+\begin{align}
+&\R_{P_n}\{W_nf_1+(1-W_n)f_2\}-\R_{P_n}(f_1)\nonumber\\
+&\qquad=\frac{ac}{\sqrt n}(1-W_n)-h^2W_n(1-W_n).
+\label{eq:decomp}
+\end{align}
+\end{proposition}
+
+The first term charges selecting the inferior expert. The second term is negative because squared loss rewards averaging. Low temperature makes $W_n$ approach a hard selector, but the transition layer near $Z_n=0$ still contributes at order $n^{-1/2}$. Its exact mass determines the threshold.
+
+Let $q(u)=\sigm(u)\{1-\sigm(u)\}$, and let $\phi$ and $\Phi$ denote the standard normal density and distribution functions. For parity $r\in\{0,1\}$, define the convergent lattice sum
+\begin{equation}
+S_r(a,T)=\sum_{j\in\mathbb Z}q\left(\frac{a(2j+r)}{T}\right).
+\label{eq:lattice}
+\end{equation}
+
+\begin{lemma}[Decision-boundary local limit]
+\label{lem:local}
+Along integers $n$ with parity $r$,
+\begin{align}
+\E[1-W_n]&\longrightarrow\Phi(-c),
+\label{eq:hardlimit}\\
+\sqrt n\,\E[W_n(1-W_n)]&\longrightarrow2\phi(c)S_r(a,T).
+\label{eq:softlimit}
+\end{align}
+\end{lemma}
+
+The first limit is an ordinary central limit theorem followed by hard thresholding. The second is local. For every fixed admissible integer $k$, the binomial local limit gives
+\[
+\sqrt n\,P_n(Z_n=k)\longrightarrow2\phi(c).
+\]
+Uniform binomial anti-concentration and the exponential decay of $q(ak/T)$ justify summing over the entire parity lattice. Complete details are in the supplement.
+
+Combining Proposition~\ref{prop:risk} and Lemma~\ref{lem:local} gives the parity-specific limit
+\begin{align}
+\sqrt n\,\E[\text{excess risk}]
+&\longrightarrow L_r(h),\nonumber\\
+L_r(h)&:=ac\Phi(-c)-2h^2\phi(c)S_r(a,T).
+\label{eq:limitcoefficient}
+\end{align}
+
+\section{Why the Threshold Is Four}
+
+It remains to make both limits in \eqref{eq:limitcoefficient} positive. Since $q=\sigm'$,
+\[
+\int_{-\infty}^{\infty}q(u)\,du=1.
+\]
+As $h\downarrow0$, the lattice spacing $2a/T$ vanishes. Shifted Riemann sums give, for both parities,
+\begin{equation}
+\frac{2a}{T}S_r(a,T)\longrightarrow1.
+\label{eq:riemann}
+\end{equation}
+Because $a/h=2-h$, equations \eqref{eq:limitcoefficient} and \eqref{eq:riemann} yield
+\begin{equation}
+\lim_{h\downarrow0}\frac{L_r(h)}h
+=2c\Phi(-c)-\frac{T}{2}\phi(c).
+\label{eq:coefficientlimit}
+\end{equation}
+The limit is the same for $r=0$ and $r=1$.
+
+The Gaussian inverse Mills ratio satisfies
+\begin{equation}
+\frac{c\Phi(-c)}{\phi(c)}\longrightarrow1
+\qquad(c\to\infty).
+\label{eq:mills}
+\end{equation}
+For every $T<4$, first choose finite $c$ so that
+\[
+T<4\frac{c\Phi(-c)}{\phi(c)}.
+\]
+Then choose a fixed sufficiently small $h$ so that $L_0(h)>0$ and $L_1(h)>0$. Equation~\eqref{eq:limitcoefficient} now gives \eqref{eq:lower} for every sufficiently large $n$, regardless of parity. This proves the lower half of Theorem~\ref{thm:phase}.
+
+The result is not specific to uniform weights. Given a fixed full-support prior $\pi=(\pi_1,\ldots,\pi_M)$, define $\widehat f_{T,\pi}$ by multiplying the $j$th exponential in \eqref{eq:weights} by $\pi_j$.
+
+\begin{corollary}[Prior-weighted exact phase]
+\label{cor:prior}
+For every full-support prior on $M$ experts and $T\geq4b^2$,
+\[
+\E_{D_n}\R_P(\widehat f_{T,\pi})
+\leq\min_{j\leq M}\left\{\R_P(f_j)+\frac{T\log(1/\pi_j)}{n+1}\right\}.
+\]
+Conversely, for every fixed full-support prior on two experts and every $0<T<4b^2$, there is a constant $\kappa>0$ such that the prior-weighted aggregate has expected excess risk at least $\kappa b^2/\sqrt n$ on a fixed two-element dictionary and two-point distributions of the form above, for all sufficiently large $n$.
+\end{corollary}
+
+The upper bound follows by retaining the prior in the Gibbs variational identity within the leave-one-out argument. For the lower bound, the weight on $f_1$ becomes $\sigm(aZ_n/T+\log(\pi_1/\pi_2))$. A fixed shift does not alter the Gaussian hard-selection limit. In the local limit, it translates the logistic lattice, whose fine-mesh Riemann sum still converges to $\int q=1$. The supplement gives both arguments.
+
+The constant four also has a direct geometric interpretation. Put $B=\E[(f_2-f_1)^2]$. For any two predictions in $[0,b]$,
+\begin{align}
+\Delta&=(f_2-f_1)(f_1+f_2-2Y),\nonumber
+\E[\Delta^2]&\leq4b^2B.
+\label{eq:variancecurvature}
+\end{align}
+The numerator controls fluctuations of empirical model selection. The denominator is exactly the curvature gain in Proposition~\ref{prop:risk}. In our normalized construction,
+\begin{align*}
+\frac{\E[\Delta^2]}{B}
+&=(2-h)^2\\
+&\longrightarrow4.
+\end{align*}
+Thus the hard instance saturates the largest possible fluctuation-to-curvature ratio.
+
+\section{The Tilting Inequality Is Also Sharp}
+
+The upper bound at $T\geq4$ rests on a deterministic stability inequality. Given a distribution $p$ on predictions $u_j\in[0,1]$ with label zero, tilt it to
+\[
+q_j=\frac{p_j e^{u_j^2/T}}{\sum_kp_ke^{u_k^2/T}}.
+\]
+The required inequality is
+\begin{equation}
+\left(\sum_jq_ju_j\right)^2\leq\sum_jp_ju_j^2.
+\label{eq:tilting}
+\end{equation}
+The published proof establishes \eqref{eq:tilting} for $T\geq4$ \citep{hogsgaard2026aggregation}. This condition cannot be improved.
+
+\begin{proposition}[Exact tilting threshold]
+\label{prop:tilting}
+Inequality~\eqref{eq:tilting} holds for every finite distribution on $[0,1]$ if and only if $T\geq4$. For predictions and labels in $[0,b]$, the exact threshold is $4b^2$.
+\end{proposition}
+
+For necessity, put probability $1-\varepsilon$ at $s\in(0,1)$ and probability $\varepsilon$ at one. As $\varepsilon\downarrow0$, the tilted mean and the original root mean square are
+\begin{align*}
+\E_qU&=s+\varepsilon e^{(1-s^2)/T}(1-s)+O(\varepsilon^2),\\
+(\E_pU^2)^{1/2}&=s+\varepsilon\frac{1-s^2}{2s}+O(\varepsilon^2).
+\end{align*}
+Hence \eqref{eq:tilting} fails for small positive $\varepsilon$ whenever
+\[
+T<\frac{1-s^2}{\log\{(1+s)/(2s)\}}.
+\]
+The right side converges to four as $s\uparrow1$. The supplement supplies the expansion and scaling details.
+
+Proposition~\ref{prop:tilting} shows that the analytic constant in the upper proof is itself exact. Theorem~\ref{thm:phase} is stronger: no different analysis can make AEW rate-optimal below that same constant.
+
+\section{Related Work and Discussion}
+
+The model-selection aggregation rate and its lower bounds originate with \citet{tsybakov2003optimal}. Progressive exponential mixtures achieve the optimal expectation rate for exp-concave losses \citep{audibert2007progressive}. Their averaging across sample sizes is essential to that guarantee. \citet{lecue2013optimality} isolate unaveraged AEW and show that it can be suboptimal in expectation at low temperature and in probability over a wider range. Their expectation construction uses disjoint indicator experts and proves only an unspecified small-temperature result. For those experts, the fluctuation-to-curvature ratio $\E[\Delta^2]/B$ equals one. Our construction varies both experts across the two inputs and makes the same ratio approach its sharp value four.
+
+Q-aggregation is designed to retain a variance reward explicitly and gives optimal random-design bounds in expectation and deviation \citep{lecue2014optimal}. Localized variants sharpen the complexity for favorable dictionaries \citep{mourtada2023local}. Mirror averaging and greedy Q-aggregation provide other optimal procedures \citep{juditsky2008mirror,dai2012deviation}. These methods show that the lower bound is about AEW rather than the aggregation problem itself.
+
+Fixed-design PAC-Bayes results permit sharp exponential-weight oracle inequalities under assumptions on regression noise \citep{dalalyan2008aggregation}. Random design is different because the same sample determines both empirical weights and where their convex combination is evaluated. The leave-one-out tilting argument of \citet{hogsgaard2026aggregation} overcomes this dependence at high temperature. Our result proves that its threshold matches the statistical obstruction.
+
+The theorem concerns uniform guarantees over arbitrary bounded dictionaries and distributions. Under a Bernstein condition, AEW can be optimal at lower temperatures \citep{lecue2013optimality}. Instance-dependent temperature thresholds are therefore a separate question. Another direction is nonquadratic strongly convex loss. The recent sufficient condition depends on boundedness, Lipschitz continuity, and curvature. Determining an exact statistical threshold there will require extremizers adapted to the loss geometry.
+
+The main conclusion is sharp and operational. For bounded squared-loss random-design aggregation, increasing temperature up to $4b^2$ is not merely sufficient to stabilize a proof. It is necessary to prevent two nearly parallel experts from turning empirical model-selection noise into an $n^{-1/2}$ expectation penalty.
+
+\bibliography{references}
+
+\clearpage
+\appendix
+\end{document}

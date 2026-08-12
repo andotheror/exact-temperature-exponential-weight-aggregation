@@ -1,0 +1,282 @@
+\documentclass[twoside]{article}
+\usepackage[preprint]{aistats2027}
+\usepackage[round,authoryear]{natbib}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{url}
+\renewcommand{\bibname}{References}
+\renewcommand{\bibsection}{\subsubsection*{\bibname}}
+\bibliographystyle{apalike}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathcal R}
+\newcommand{\sigm}{\operatorname{sigm}}
+\begin{document}
+\runningauthor{}
+\twocolumn[
+\aistatstitle{Supplement: The Exact Temperature of Exponential-Weight Aggregation}
+\aistatsauthor{Pahan Dewasurendra}
+\aistatsaddress{Johns Hopkins University}
+]
+
+\section{Exact Risk Identity}
+
+We first prove the algebraic identity used in the lower bound. For any two real predictions $f_1,f_2$, any $w\in[0,1]$, and any label $y$,
+\begin{align}
+&\{w f_1+(1-w)f_2-y\}^2\nonumber\\
+&\quad=w(f_1-y)^2+(1-w)(f_2-y)^2\nonumber\\
+&\qquad-w(1-w)(f_1-f_2)^2.
+\label{eq:mixtureidentity}
+\end{align}
+This follows by expanding both sides.
+
+\begin{proof}[Proof of Proposition 2 in the main paper]
+On the two-point construction, $\R_{P_n}(f_2)-\R_{P_n}(f_1)=ac/\sqrt n$ and $(f_1-f_2)^2=h^2$ almost surely. Apply \eqref{eq:mixtureidentity} with $w=W_n$, take population expectation conditional on the training sample, and subtract $\R_{P_n}(f_1)$. This gives
+\[
+\frac{ac}{\sqrt n}(1-W_n)-h^2W_n(1-W_n).
+\]
+The cumulative empirical loss difference is $aZ_n$, so the definition of the Gibbs weights gives $W_n=\sigm(aZ_n/T)$.
+\end{proof}
+
+\section{Triangular Binomial Limits}
+
+Fix $c>0$. For every sufficiently large $n$, let $\epsilon_{n,1},\ldots,\epsilon_{n,n}$ be i.i.d. random signs with
+\[
+P(\epsilon_{n,i}=1)=\frac12+\frac{c}{2\sqrt n},
+\qquad
+P(\epsilon_{n,i}=-1)=\frac12-\frac{c}{2\sqrt n},
+\]
+and put $Z_n=\sum_i\epsilon_{n,i}$. Let $\phi$ and $\Phi$ be the standard normal density and distribution functions.
+
+\begin{lemma}[Global and local limits]
+\label{lem:binomial}
+The following claims hold.
+\begin{enumerate}
+\item $Z_n/\sqrt n$ converges in distribution to $N(c,1)$.
+\item For each fixed integer $k$ along sample sizes satisfying $n\equiv k\pmod 2$,
+\[
+\sqrt n\,P(Z_n=k)\longrightarrow2\phi(c).
+\]
+\item There is $C_c<\infty$ such that, for all sufficiently large $n$ and every integer $k$,
+\[
+\sqrt n\,P(Z_n=k)\leq C_c.
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The row mean is $\E\epsilon_{n,i}=c/\sqrt n$ and the row variance is $1-c^2/n$. The bounded triangular-array central limit theorem proves the first claim.
+
+For the second and third claims, write $B_n=(n+Z_n)/2$. Then $B_n$ is binomial with success probability $p_n=1/2+c/(2\sqrt n)$. If $k$ has the correct parity,
+\[
+P(Z_n=k)=P\left(B_n=\frac{n+k}{2}\right).
+\]
+For fixed $k$, put $d_{n,k}=(n+k)/2-np_n$ and $v_n=np_n(1-p_n)$. Stirling's formula for the binomial mass gives
+\begin{align*}
+P\left(B_n=\frac{n+k}{2}\right)
+&=\frac{1+o(1)}{\sqrt{2\pi v_n}}
+\exp\left\{-\frac{d_{n,k}^2}{2v_n}\right\}\\
+&=\frac{2\phi(c)+o(1)}{\sqrt n}.
+\end{align*}
+For the uniform claim, the maximum binomial point mass is at most $C/\sqrt{np_n(1-p_n)}$. Since $p_n(1-p_n)$ is bounded away from zero for all sufficiently large $n$, the required bound follows. Incorrect parity has probability zero.
+\end{proof}
+
+We next prove the two limits in the main text. Define
+\[
+q(u)=\sigm(u)\{1-\sigm(u)\}.
+\]
+Notice that $0\leq q(u)\leq e^{-|u|}$.
+
+\begin{proof}[Proof of Lemma 3 in the main paper]
+The triangular central limit theorem gives $U_n:=Z_n/\sqrt n\Rightarrow U\sim N(c,1)$. For every fixed $\eta>0$,
+\[
+\sigm(-a\sqrt n U_n/T)
+\]
+converges uniformly to $\mathbf 1\{U_n<0\}$ on $|U_n|\geq\eta$. The probability of $|U_n|<\eta$ has limit at most $P(|U|\leq\eta)$, which vanishes with $\eta$. Since the variables are bounded, it follows that
+\[
+\E[1-W_n]=\E\sigm(-aZ_n/T)\longrightarrow P(U<0)=\Phi(-c).
+\]
+
+Now restrict to sample sizes of parity $r$. Put $q_{j,r}=q(a(2j+r)/T)$. By Lemma~\ref{lem:binomial}, for every $j\in\mathbb Z$,
+\[
+\sqrt n\,P(Z_n=2j+r)\longrightarrow2\phi(c).
+\]
+Moreover,
+\[
+\sqrt n\,P(Z_n=2j+r)q_{j,r}
+\leq C_c e^{-a|2j+r|/T},
+\]
+and the right side is summable over $j$. Dominated convergence for series gives
+\begin{align*}
+\sqrt n\,\E[W_n(1-W_n)]
+&=\sum_{j\in\mathbb Z}\sqrt n\,P(Z_n=2j+r)
+q_{j,r}\\
+&\longrightarrow2\phi(c)
+\sum_{j\in\mathbb Z}q_{j,r}.
+\end{align*}
+This is the claimed limit.
+\end{proof}
+
+\section{Positive Limits Below Four}
+
+We include all details needed to choose the constants uniformly over both sample parities.
+
+\begin{lemma}[Shifted logistic Riemann sums]
+\label{lem:riemann}
+For fixed $T>0$, $r\in\{0,1\}$, and $a>0$, put
+\[
+S_r(a,T)=\sum_{j\in\mathbb Z}q\left(\frac{a(2j+r)}T\right).
+\]
+Then
+\[
+\lim_{a\downarrow0}\frac{2a}{T}S_r(a,T)=1.
+\]
+The convergence holds uniformly over $r\in\{0,1\}$.
+\end{lemma}
+
+\begin{proof}
+The function $q$ is continuous, nonnegative, and integrable. It is the derivative of $\sigm$, so its integral over the real line is one. The displayed expression is the Riemann sum for $q$ on a grid of spacing $2a/T$. The two values of $r$ correspond to the unshifted grid and its half-grid translate. Both converge to the same integral. Uniformity is immediate because there are only two shifts.
+\end{proof}
+
+\begin{lemma}[Gaussian choice]
+\label{lem:mills}
+For every $T<4$, there is $c>0$ such that
+\[
+2c\Phi(-c)-\frac{T}{2}\phi(c)>0.
+\]
+\end{lemma}
+
+\begin{proof}
+Integration by parts gives the standard inverse Mills asymptotic
+\[
+\Phi(-c)=\frac{\phi(c)}c\{1+O(c^{-2})\}.
+\]
+Therefore $c\Phi(-c)/\phi(c)\to1$. Choose $c$ so that this ratio exceeds $T/4$.
+\end{proof}
+
+\begin{proof}[Proof of the lower half of Theorem 1]
+Fix $T<4$ and choose $c$ by Lemma~\ref{lem:mills}. For $h\in(0,1)$, let $a=h(2-h)$ and
+\[
+L_r(h)=ac\Phi(-c)-2h^2\phi(c)S_r(a,T).
+\]
+Lemma~\ref{lem:riemann} and $a/h\to2$ imply
+\begin{align*}
+\frac{L_r(h)}h
+&=(2-h)c\Phi(-c)
+-2h\phi(c)S_r(a,T)\\
+&\longrightarrow2c\Phi(-c)-\frac{T}{2}\phi(c)>0.
+\end{align*}
+Choose one fixed $h>0$ small enough that $L_0(h)>0$ and $L_1(h)>0$. Proposition 2 and Lemma 3 in the main paper show that, along parity $r$,
+\[
+\sqrt n\,\E[\text{excess risk}]\longrightarrow L_r(h).
+\]
+With $\kappa=\frac12\min\{L_0(h),L_1(h)\}$, the expected excess is at least $\kappa/\sqrt n$ for every sufficiently large $n$. The same $c,h,f_1,f_2$ work for every such $n$. Only the two input probabilities change.
+
+For a range bound $b>0$, multiply $Y,f_1,f_2$ by $b$. Every squared loss, risk difference, and excess risk is multiplied by $b^2$, while Gibbs weights at temperature $T$ become the normalized weights at temperature $T/b^2$. Hence the lower bound holds whenever $T<4b^2$, with value $\kappa b^2/\sqrt n$. The upper half is Theorem 1 of \citet{hogsgaard2026aggregation}. This completes the exact phase theorem.
+\end{proof}
+
+\section{Prior-Weighted Exact Phase}
+
+\begin{proof}[Proof of Corollary 4 in the main paper]
+We first prove the upper bound. Let $N=n+1$ and write
+\[
+S_j=\sum_{i=1}^N(f_j(X_i)-Y_i)^2,
+\qquad
+p_j=\frac{\pi_je^{-S_j/T}}{\sum_k\pi_ke^{-S_k/T}}.
+\]
+After observation $i$ is removed, the prior-weighted Gibbs probabilities are
+\[
+p_j^{(-i)}
+=\frac{p_je^{(f_j(X_i)-Y_i)^2/T}}
+{\sum_kp_ke^{(f_k(X_i)-Y_i)^2/T}}.
+\]
+When $T\geq4b^2$, the squared-loss tilting inequality of \citet{hogsgaard2026aggregation} gives
+\[
+\sum_{i=1}^N
+\left\{\sum_jp_j^{(-i)}f_j(X_i)-Y_i\right\}^2
+\leq\sum_jp_jS_j.
+\]
+The Gibbs variational identity and nonnegativity of relative entropy give, for every $j$,
+\begin{align*}
+\sum_kp_kS_k
+&=-T\log\left(\sum_k\pi_ke^{-S_k/T}\right)-T\mathrm{KL}(p\|\pi)\\
+&\leq S_j+T\log(1/\pi_j).
+\end{align*}
+Take expectations. By exchangeability, every term on the left has expectation $\E_{D_n}\R_P(\widehat f_{T,\pi})$. The expected value of $S_j$ is $N\R_P(f_j)$. Dividing by $N$ and minimizing over $j$ proves the stated oracle inequality.
+
+For the converse, it is enough to work at $b=1$. Fix $\pi_1,\pi_2>0$ and put $\lambda=\log(\pi_1/\pi_2)$. The prior-weighted aggregate places weight
+\[
+W_{n,\pi}=\sigm(aZ_n/T+\lambda)
+\]
+on $f_1$. Proposition 2 in the main paper is algebraic, so its risk decomposition remains valid with $W_n$ replaced by $W_{n,\pi}$.
+
+Since $\lambda$ is fixed, the triangular-array central limit argument in the proof of Lemma 3 gives
+\[
+\E[1-W_{n,\pi}]\longrightarrow\Phi(-c).
+\]
+Along sample sizes of parity $r$, the same local limit and dominated-convergence argument gives
+\[
+\sqrt n\,\E[W_{n,\pi}(1-W_{n,\pi})]
+\longrightarrow2\phi(c)S_{r,\lambda}(a,T),
+\]
+where
+\[
+S_{r,\lambda}(a,T)=\sum_{j\in\mathbb Z}q\left(\frac{a(2j+r)}T+\lambda\right).
+\]
+For every fixed $\lambda$, this shifted lattice satisfies
+\[
+\frac{2a}{T}S_{r,\lambda}(a,T)\longrightarrow\int_{-\infty}^{\infty}q(u)\,du=1
+\qquad(a\downarrow0)
+\]
+for both parities. The proof of Theorem 1 therefore applies without change: first choose $c$ with $2c\Phi(-c)>(T/2)\phi(c)$, then choose one fixed $h>0$ small enough to make both parity limits positive. Scaling by $b$ completes the proof.
+\end{proof}
+
+\section{Sharpness of the Tilting Inequality}
+
+We prove the necessity part of Proposition 5. Sufficiency at $T\geq4$ is Lemma 2 of \citet{hogsgaard2026aggregation}.
+
+Fix $s\in(0,1)$ and let $U$ have probability $1-\varepsilon$ at $s$ and probability $\varepsilon$ at one. Let $p$ denote this law and define its exponential tilt by
+\[
+q(du)=\frac{e^{u^2/T}p(du)}{\E_p e^{U^2/T}}.
+\]
+Put $A=e^{s^2/T}$ and $B=e^{1/T}$. Direct differentiation at $\varepsilon=0$ gives
+\begin{align}
+\E_qU
+&=\frac{(1-\varepsilon)sA+\varepsilon B}
+{(1-\varepsilon)A+\varepsilon B}\nonumber\\
+&=s+\varepsilon\frac BA(1-s)+O(\varepsilon^2)
+\label{eq:tiltedexpansion}
+\end{align}
+and
+\begin{align}
+(\E_pU^2)^{1/2}
+&=\{(1-\varepsilon)s^2+\varepsilon\}^{1/2}\nonumber\\
+&=s+\varepsilon\frac{1-s^2}{2s}+O(\varepsilon^2).
+\label{eq:rmsexpansion}
+\end{align}
+The first-order coefficient in \eqref{eq:tiltedexpansion} exceeds that in \eqref{eq:rmsexpansion} exactly when
+\[
+e^{(1-s^2)/T}>\frac{1+s}{2s},
+\]
+or equivalently
+\begin{equation}
+T<A(s):=\frac{1-s^2}{\log\{(1+s)/(2s)\}}.
+\label{eq:as}
+\end{equation}
+In that case $\E_qU>(\E_pU^2)^{1/2}$ for all sufficiently small positive $\varepsilon$, contradicting the tilting inequality.
+
+Let $s=1-d$ and send $d\downarrow0$. Then
+\[
+1-s^2=2d+O(d^2),
+\qquad
+\log\frac{1+s}{2s}=\frac d2+O(d^2),
+\]
+so $A(s)\to4$. For every $T<4$, choose $s$ close enough to one that $T<A(s)$, then choose $\varepsilon>0$ small enough to obtain a violation. Thus universal validity requires $T\geq4$.
+
+For predictions in $[0,b]$, replace $U$ by $bU$. The tilt exponent becomes $b^2U^2/T$, so the normalized temperature is $T/b^2$. The threshold is therefore $4b^2$.
+
+\bibliography{references}
+\end{document}
