@@ -58,11 +58,7 @@ This question is specific to the unaveraged random-design aggregate. Fixed-desig
 
 \section{Setting and Exact Phase}
 
-Let $P$ be a distribution on $\mathcal X\times[0,b]$, and let $\cF=\{f_1,\ldots,f_M\}$ be a deterministic dictionary of measurable functions from $\mathcal X$ to $[0,b]$. For squared-loss risk
-\[
-\R_P(f)=\E_P[(f(X)-Y)^2],
-\]
-observe an i.i.d. sample $D_n=((X_i,Y_i))_{i=1}^n$. At temperature $T>0$, AEW uses
+Let $P$ be a distribution on $\mathcal X\times[0,b]$, and let $\cF=\{f_1,\ldots,f_M\}$ be a deterministic dictionary of measurable functions from $\mathcal X$ to $[0,b]$. For squared-loss risk \[ \R_P(f)=\E_P[(f(X)-Y)^2], \] observe an i.i.d. sample $D_n=((X_i,Y_i))_{i=1}^n$. At temperature $T>0$, AEW uses
 \begin{equation}
 \widehat\theta_j=
 \frac{\exp\{-T^{-1}\sum_{i=1}^n(f_j(X_i)-Y_i)^2\}}
@@ -71,20 +67,11 @@ observe an i.i.d. sample $D_n=((X_i,Y_i))_{i=1}^n$. At temperature $T>0$, AEW us
 \end{equation}
 and outputs $\widehat f_T=\sum_j\widehat\theta_jf_j$.
 
-We call a fixed temperature uniformly expectation-rate optimal if a finite constant $C_{T,b}$ satisfies
-\[
-\E_{D_n}\R_P(\widehat f_T)
-\leq \min_{j\leq M}\R_P(f_j)+C_{T,b}\frac{\log M}{n}
-\]
-for every $n,M,P$, and $\cF$ as above. Allowing the problem to depend on $n$ is standard in this minimax definition.
+We call a fixed temperature uniformly expectation-rate optimal if a finite constant $C_{T,b}$ satisfies \[ \E_{D_n}\R_P(\widehat f_T) \leq \min_{j\leq M}\R_P(f_j)+C_{T,b}\frac{\log M}{n} \] for every $n,M,P$, and $\cF$ as above. Allowing the problem to depend on $n$ is standard in this minimax definition.
 
 \begin{theorem}[Exact temperature phase]
 \label{thm:phase}
-For squared loss with labels and predictions in $[0,b]$, AEW is uniformly expectation-rate optimal if and only if
-\[
-T\geq4b^2.
-\]
-More precisely:
+For squared loss with labels and predictions in $[0,b]$, AEW is uniformly expectation-rate optimal if and only if \[ T\geq4b^2. \] More precisely:
 \begin{enumerate}
 \item If $T\geq4b^2$, inequality~\eqref{eq:upper} holds for every finite dictionary and every random-design distribution.
 \item For every fixed $0<T<4b^2$, there are constants $\kappa>0$ and $n_0$, a fixed two-element dictionary, and distributions $P_n$ supported on two input-label pairs such that, for every $n\geq n_0$,
@@ -104,11 +91,7 @@ We prove the normalized case $b=1$. Multiplying every label and prediction by $b
 
 \section{The Two-Expert Construction}
 
-Fix $0<T<4$. Let $c>0$ and $h\in(0,1)$ be constants chosen below, and put
-\[
-a=h(2-h).
-\]
-The input space is $\{+,-\}$. Labels and predictions are given by Table~\ref{tab:construction}.
+Fix $0<T<4$. Let $c>0$ and $h\in(0,1)$ be constants chosen below, and put \[ a=h(2-h). \] The input space is $\{+,-\}$. Labels and predictions are given by Table~\ref{tab:construction}.
 
 \begin{table}[h]
 \centering
@@ -174,11 +157,7 @@ Along integers $n$ with parity $r$,
 \end{align}
 \end{lemma}
 
-The first limit is an ordinary central limit theorem followed by hard thresholding. The second is local. For every fixed admissible integer $k$, the binomial local limit gives
-\[
-\sqrt n\,P_n(Z_n=k)\longrightarrow2\phi(c).
-\]
-Uniform binomial anti-concentration and the exponential decay of $q(ak/T)$ justify summing over the entire parity lattice. Complete details are in the supplement.
+The first limit is an ordinary central limit theorem followed by hard thresholding. The second is local. For every fixed admissible integer $k$, the binomial local limit gives \[ \sqrt n\,P_n(Z_n=k)\longrightarrow2\phi(c). \] Uniform binomial anti-concentration and the exponential decay of $q(ak/T)$ justify summing over the entire parity lattice. Complete details are in the supplement.
 
 Combining Proposition~\ref{prop:risk} and Lemma~\ref{lem:local} gives the parity-specific limit
 \begin{align}
@@ -190,11 +169,7 @@ L_r(h)&:=ac\Phi(-c)-2h^2\phi(c)S_r(a,T).
 
 \section{Why the Threshold Is Four}
 
-It remains to make both limits in \eqref{eq:limitcoefficient} positive. Since $q=\sigm'$,
-\[
-\int_{-\infty}^{\infty}q(u)\,du=1.
-\]
-As $h\downarrow0$, the lattice spacing $2a/T$ vanishes. Shifted Riemann sums give, for both parities,
+It remains to make both limits in \eqref{eq:limitcoefficient} positive. Since $q=\sigm'$, \[ \int_{-\infty}^{\infty}q(u)\,du=1. \] As $h\downarrow0$, the lattice spacing $2a/T$ vanishes. Shifted Riemann sums give, for both parities,
 \begin{equation}
 \frac{2a}{T}S_r(a,T)\longrightarrow1.
 \label{eq:riemann}
@@ -213,22 +188,13 @@ The Gaussian inverse Mills ratio satisfies
 \qquad(c\to\infty).
 \label{eq:mills}
 \end{equation}
-For every $T<4$, first choose finite $c$ so that
-\[
-T<4\frac{c\Phi(-c)}{\phi(c)}.
-\]
-Then choose a fixed sufficiently small $h$ so that $L_0(h)>0$ and $L_1(h)>0$. Equation~\eqref{eq:limitcoefficient} now gives \eqref{eq:lower} for every sufficiently large $n$, regardless of parity. This proves the lower half of Theorem~\ref{thm:phase}.
+For every $T<4$, first choose finite $c$ so that \[ T<4\frac{c\Phi(-c)}{\phi(c)}. \] Then choose a fixed sufficiently small $h$ so that $L_0(h)>0$ and $L_1(h)>0$. Equation~\eqref{eq:limitcoefficient} now gives \eqref{eq:lower} for every sufficiently large $n$, regardless of parity. This proves the lower half of Theorem~\ref{thm:phase}.
 
 The result is not specific to uniform weights. Given a fixed full-support prior $\pi=(\pi_1,\ldots,\pi_M)$, define $\widehat f_{T,\pi}$ by multiplying the $j$th exponential in \eqref{eq:weights} by $\pi_j$.
 
 \begin{corollary}[Prior-weighted exact phase]
 \label{cor:prior}
-For every full-support prior on $M$ experts and $T\geq4b^2$,
-\[
-\E_{D_n}\R_P(\widehat f_{T,\pi})
-\leq\min_{j\leq M}\left\{\R_P(f_j)+\frac{T\log(1/\pi_j)}{n+1}\right\}.
-\]
-Conversely, for every fixed full-support prior on two experts and every $0<T<4b^2$, there is a constant $\kappa>0$ such that the prior-weighted aggregate has expected excess risk at least $\kappa b^2/\sqrt n$ on a fixed two-element dictionary and two-point distributions of the form above, for all sufficiently large $n$.
+For every full-support prior on $M$ experts and $T\geq4b^2$, \[ \E_{D_n}\R_P(\widehat f_{T,\pi}) \leq\min_{j\leq M}\left\{\R_P(f_j)+\frac{T\log(1/\pi_j)}{n+1}\right\}. \] Conversely, for every fixed full-support prior on two experts and every $0<T<4b^2$, there is a constant $\kappa>0$ such that the prior-weighted aggregate has expected excess risk at least $\kappa b^2/\sqrt n$ on a fixed two-element dictionary and two-point distributions of the form above, for all sufficiently large $n$.
 \end{corollary}
 
 The upper bound follows by retaining the prior in the Gibbs variational identity within the leave-one-out argument. For the lower bound, the weight on $f_1$ becomes $\sigm(aZ_n/T+\log(\pi_1/\pi_2))$. A fixed shift does not alter the Gaussian hard-selection limit. In the local limit, it translates the logistic lattice, whose fine-mesh Riemann sum still converges to $\int q=1$. The supplement gives both arguments.
@@ -249,11 +215,7 @@ Thus the hard instance saturates the largest possible fluctuation-to-curvature r
 
 \section{The Tilting Inequality Is Also Sharp}
 
-The upper bound at $T\geq4$ rests on a deterministic stability inequality. Given a distribution $p$ on predictions $u_j\in[0,1]$ with label zero, tilt it to
-\[
-q_j=\frac{p_j e^{u_j^2/T}}{\sum_kp_ke^{u_k^2/T}}.
-\]
-The required inequality is
+The upper bound at $T\geq4$ rests on a deterministic stability inequality. Given a distribution $p$ on predictions $u_j\in[0,1]$ with label zero, tilt it to \[ q_j=\frac{p_j e^{u_j^2/T}}{\sum_kp_ke^{u_k^2/T}}. \] The required inequality is
 \begin{equation}
 \left(\sum_jq_ju_j\right)^2\leq\sum_jp_ju_j^2.
 \label{eq:tilting}
@@ -270,11 +232,7 @@ For necessity, put probability $1-\varepsilon$ at $s\in(0,1)$ and probability $\
 \E_qU&=s+\varepsilon e^{(1-s^2)/T}(1-s)+O(\varepsilon^2),\\
 (\E_pU^2)^{1/2}&=s+\varepsilon\frac{1-s^2}{2s}+O(\varepsilon^2).
 \end{align*}
-Hence \eqref{eq:tilting} fails for small positive $\varepsilon$ whenever
-\[
-T<\frac{1-s^2}{\log\{(1+s)/(2s)\}}.
-\]
-The right side converges to four as $s\uparrow1$. The supplement supplies the expansion and scaling details.
+Hence \eqref{eq:tilting} fails for small positive $\varepsilon$ whenever \[ T<\frac{1-s^2}{\log\{(1+s)/(2s)\}}. \] The right side converges to four as $s\uparrow1$. The supplement supplies the expansion and scaling details.
 
 Proposition~\ref{prop:tilting} shows that the analytic constant in the upper proof is itself exact. Theorem~\ref{thm:phase} is stronger: no different analysis can make AEW rate-optimal below that same constant.
 
